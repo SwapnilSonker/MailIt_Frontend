@@ -9,15 +9,23 @@ import Template from "@/utils/template";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { Mail, Sparkles, Send } from 'lucide-react';
+import { useEffect, useState } from "react";
 
-const MotionDiv = dynamic(
-  () => import("framer-motion").then((mod) => mod.motion.div),
-  {
-    ssr: false, // Disable SSR
-  }
-);
+
 
 export default function Home() {
+  const [windowDimensions, setWindowDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  // Use useEffect to set window dimensions once the component mounts
+  useEffect(() => {
+    setWindowDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  }, []);
   return (
     <div className="bg-gradient-to-br from-yellow-600 to-white">
       <Template>
@@ -42,12 +50,12 @@ export default function Home() {
               key={i}
               className="absolute h-2 w-2 bg-yellow-300 rounded-full"
               initial={{ 
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight
+                x: Math.random() * windowDimensions.width,
+                y: Math.random() * windowDimensions.height
               }}
               animate={{
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
+                x: Math.random() * windowDimensions.width,
+                y: Math.random() * windowDimensions.height,
                 scale: [1, 1.5, 1],
                 opacity: [0.7, 1, 0.7]
               }}
