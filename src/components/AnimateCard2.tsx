@@ -21,9 +21,46 @@ export function AnimatedCard2() {
     CSV: null
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    const apiPayload = new FormData()
+
+    apiPayload.append('sender_email', formData.sender_email)
+    apiPayload.append('sender_password', formData.sender_password)
+    apiPayload.append('html_body', formData.html_body)
+
+    if(formData.temporary_pdf){
+      apiPayload.append('temporary_pdf', formData.temporary_pdf)
+    }
+    if(formData.CSV){
+      apiPayload.append('CSV', formData.CSV)
+    }
+    if(formData.data_source){
+      apiPayload.append('data_source', formData.data_source)
+    }
+
+    if(!formData.temporary_pdf && !formData.CSV && !formData.data_source){
+      alert("You must provide atleast one");
+      return
+    }
+
+    try{
+      const response = await fetch('https://mailit-2.onrender.com//send-html-via-email/', {
+        method: 'POST',
+        body: apiPayload,
+      })
+
+      if(!response.ok){
+        throw new Error("failed to perform the api operation")
+      }
+
+      const result = await response.json()
+      console.log('API response', result)
+
+    }
+    catch(error){
+      console.error('Error', error)
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'pdf' | 'csv') => {
