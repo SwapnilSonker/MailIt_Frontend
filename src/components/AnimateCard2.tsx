@@ -3,22 +3,22 @@ import { motion } from 'framer-motion';
 import { Send, Upload } from 'lucide-react';
 
 interface FormData {
-  email: string;
-  password: string;
-  test1: string;
-  test2: string;
-  pdfFile: File | null;
-  csvFile: File | null;
+  sender_email: string;
+  sender_password: string;
+  data_source: string;
+  html_body: string;
+  temporary_pdf: File | null;
+  CSV: File | null;
 }
 
 export function AnimatedCard2() {
   const [formData, setFormData] = useState<FormData>({
-    email: '',
-    password: '',
-    test1: '',
-    test2: '',
-    pdfFile: null,
-    csvFile: null
+    sender_email: '',
+    sender_password: '',
+    data_source: '',
+    html_body: '',
+    temporary_pdf: null,
+    CSV: null
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -30,7 +30,7 @@ export function AnimatedCard2() {
     const file = e.target.files?.[0] || null;
     setFormData(prev => ({
       ...prev,
-      [type === 'pdf' ? 'pdfFile' : 'csvFile']: file
+      [type === 'pdf' ? 'temporary_pdf' : 'CSV']: file
     }));
   };
 
@@ -48,7 +48,7 @@ export function AnimatedCard2() {
     >
       <form onSubmit={handleSubmit} className="space-y-8">
         <h2 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-          Upload Documents
+          SEND CUSTOM EMAIL
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -73,11 +73,11 @@ export function AnimatedCard2() {
                 />
                 <label
                   htmlFor="pdf-upload"
-                  className="w-full flex items-center justify-center px-4 py-3 border-2 border-dashed border-purple-300 rounded-lg cursor-pointer hover:border-purple-500 transition-colors"
+                  className="w-full flex items-center justify-center px-4 py-3 border-2 border-dashed border-yellow-300 rounded-lg cursor-pointer hover:border-yellow-500 transition-colors"
                 >
-                  <Upload className="mr-2 text-purple-500" size={20} />
+                  <Upload className="mr-2 text-yellow-500" size={20} />
                   <span className="text-gray-600">
-                    {formData.pdfFile ? formData.pdfFile.name : 'Upload PDF'}
+                    {formData.temporary_pdf ? formData.temporary_pdf.name : 'Upload PDF'}
                   </span>
                 </label>
               </div>
@@ -97,11 +97,11 @@ export function AnimatedCard2() {
                 />
                 <label
                   htmlFor="csv-upload"
-                  className="w-full flex items-center justify-center px-4 py-3 border-2 border-dashed border-purple-300 rounded-lg cursor-pointer hover:border-purple-500 transition-colors"
+                  className="w-full flex items-center justify-center px-4 py-3 border-2 border-dashed border-yellow-300 rounded-lg cursor-pointer hover:border-yellow-500 transition-colors"
                 >
-                  <Upload className="mr-2 text-purple-500" size={20} />
+                  <Upload className="mr-2 text-yellow-500" size={20} />
                   <span className="text-gray-600">
-                    {formData.csvFile ? formData.csvFile.name : 'Upload CSV'}
+                    {formData.CSV ? formData.CSV.name : 'Upload CSV'}
                   </span>
                 </label>
               </div>
@@ -118,10 +118,10 @@ export function AnimatedCard2() {
               Email
             </label>
             <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 outline-none"
+              type="sender_email"
+              value={formData.sender_email}
+              onChange={(e) => setFormData({ ...formData, sender_email: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border text-black border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 outline-none"
               placeholder="Enter your email"
             />
           </motion.div>
@@ -135,10 +135,10 @@ export function AnimatedCard2() {
               Password
             </label>
             <input
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 outline-none"
+              type="sender_password"
+              value={formData.sender_password}
+              onChange={(e) => setFormData({ ...formData, sender_password: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border text-black border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 outline-none"
               placeholder="Enter your password"
             />
           </motion.div>
@@ -149,14 +149,14 @@ export function AnimatedCard2() {
             transition={{ delay: 0.5 }}
           >
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Test Field 1
+              Receiver's Email
             </label>
             <input
               type="text"
-              value={formData.test1}
-              onChange={(e) => setFormData({ ...formData, test1: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 outline-none"
-              placeholder="Test field 1"
+              value={formData.data_source}
+              onChange={(e) => setFormData({ ...formData, data_source: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border text-black border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 outline-none"
+              placeholder="Receiver's Email"
             />
           </motion.div>
 
@@ -166,14 +166,14 @@ export function AnimatedCard2() {
             transition={{ delay: 0.6 }}
           >
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Test Field 2
+              HTML or Text
             </label>
             <input
               type="text"
-              value={formData.test2}
-              onChange={(e) => setFormData({ ...formData, test2: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 outline-none"
-              placeholder="Test field 2"
+              value={formData.html_body}
+              onChange={(e) => setFormData({ ...formData, html_body: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border text-black border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 outline-none"
+              placeholder="HTML or Text"
             />
           </motion.div>
         </div>
