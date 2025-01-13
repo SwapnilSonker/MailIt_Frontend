@@ -7,7 +7,7 @@ import { GlowingHomeIcon } from "@/components/GlowingHome";
 import { GlowingServicesIcon } from "@/components/GlowingService";
 import Template from "@/utils/template";
 import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 import { Mail, Sparkles, Send } from 'lucide-react';
 import { useEffect, useState } from "react";
 
@@ -31,10 +31,10 @@ export default function Home() {
       <Template>
         <header className="flex justify-center items-center p-5 ">
           <div className="flex items-center space-x-10 bg-white/10 backdrop-blur-md rounded-full px-10 py-4 shadow-lg">
-            <GlowingHomeIcon />
-            <GlowingAboutIcon />
-            <GlowingServicesIcon />
-            <GlowingGithubIcon />
+            <GlowingHomeIcon key={"home-icon"} />
+            <GlowingAboutIcon key={"about-icon"} />
+            <GlowingServicesIcon key={"services-icon"} />
+            <GlowingGithubIcon key={"github-icon"} />
           </div>
         </header>
         <div className="flex items-center justify-center min-h-screen relative overflow-hidden">
@@ -47,7 +47,7 @@ export default function Home() {
         >
           {[...Array(20)].map((_, i) => (
             <motion.div
-              key={i}
+              key={`particle-${i}`}
               className="absolute h-2 w-2 bg-yellow-300 rounded-full"
               initial={{ 
                 x: Math.random() * windowDimensions.width,
@@ -179,6 +179,7 @@ export default function Home() {
             stiffness: 100,
             damping: 15
           }}
+          key="animated-card-1"
         >
           <AnimatedCard />
         </motion.div>
@@ -193,6 +194,7 @@ export default function Home() {
               damping: 15,
               delay: 0.2
             }}
+            key="animated-card-2"
           >
             <AnimatedCard2/>
           </motion.div>
