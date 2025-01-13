@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Upload } from 'lucide-react';
+import { Loader, Send, Upload } from 'lucide-react';
 
 interface FormData {
   sender_password: string;
@@ -10,6 +10,7 @@ interface FormData {
 }
 
 export function AnimatedCard() {
+  const [Loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>({
     sender_password: '',
     sender_email: '',
@@ -18,16 +19,17 @@ export function AnimatedCard() {
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'pdf' | 'csv') => {
-    const file = e.target.files?.[0] || null;
+    const file = e?.target?.files?.[0] || null;
     setFormData(prev => ({
       ...prev,
-      [type === 'pdf' ? 'pdfFile' : 'csv_file']: file
+      [type === 'pdf' ? 'resume_pdf' : 'csv_file']: file
     }));
   };
   
 
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true)
 
     const apiPayload = new FormData()
 
@@ -45,16 +47,18 @@ export function AnimatedCard() {
         body: apiPayload,
       })
 
-      if(!response.ok){
-        throw new Error("failed to perform the api operation")
+      if (!response.ok) {
+        throw new Error("failed to perform the api operation");
       }
 
-      const result = await response.json()
-      console.log('API response', result)
-
+      const result = await response.json();
+      console.log("API response", result);
+      
+    } catch (error) {
+      console.error("Error", error);
     }
-    catch(error){
-      console.error('Error', error)
+    finally{
+      setLoading(false);
     }
 
     // Further processing can be done here, such as sending the files to the server.
@@ -132,7 +136,7 @@ export function AnimatedCard() {
                   type="file"
                   accept=".pdf"
                   onChange={(e) => handleFileChange(e, "pdf")}
-                  className="hidden"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   id="pdf-upload"
                 />
                 <label
@@ -158,7 +162,7 @@ export function AnimatedCard() {
                   type="file"
                   accept=".csv"
                   onChange={(e) => handleFileChange(e, "csv")}
-                  className="hidden"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   id="csv-upload"
                 />
                 <label
@@ -182,8 +186,10 @@ export function AnimatedCard() {
           whileTap={{ scale: 0.98 }}
           className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:opacity-90 transition-opacity"
         >
-          <span>Submit</span>
-          <Send size={18} />
+          {!Loading ? 
+          <><span>Submit</span><Send size={20} /></> :
+          <><span>Loading</span><Loader size={20} /></>
+        }
         </motion.button>
       </form>
     </motion.div>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Send, Upload } from 'lucide-react';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Loader, Send, Upload } from "lucide-react";
 
 interface FormData {
   sender_email: string;
@@ -12,74 +12,92 @@ interface FormData {
 }
 
 export function AnimatedCard2() {
+  const [Loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>({
-    sender_email: '',
-    sender_password: '',
-    data_source: '',
-    html_body: '',
+    sender_email: "",
+    sender_password: "",
+    data_source: "",
+    html_body: "",
     temporary_pdf: null,
-    CSV: null
+    CSV: null,
   });
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const apiPayload = new FormData()
+    setLoading(true)
+    const apiPayload = new FormData();
 
-    apiPayload.append('sender_email', formData.sender_email)
-    apiPayload.append('sender_password', formData.sender_password)
-    apiPayload.append('html_body', formData.html_body)
+    apiPayload.append("sender_email", formData.sender_email);
+    apiPayload.append("sender_password", formData.sender_password);
+    apiPayload.append("html_body", formData.html_body);
 
-    if(formData.temporary_pdf){
-      apiPayload.append('temporary_pdf', formData.temporary_pdf)
+    if (formData.temporary_pdf) {
+      apiPayload.append("temporary_pdf", formData.temporary_pdf);
     }
-    if(formData.CSV){
-      apiPayload.append('CSV', formData.CSV)
+    if (formData.CSV) {
+      apiPayload.append("CSV", formData.CSV);
     }
-    if(formData.data_source){
-      apiPayload.append('data_source', formData.data_source)
+    if (formData.data_source) {
+      apiPayload.append("data_source", formData.data_source);
     }
 
-    if(!formData.temporary_pdf && !formData.CSV && !formData.data_source){
+    if (!formData.temporary_pdf && !formData.CSV && !formData.data_source) {
       alert("You must provide atleast one");
-      return
+      return;
     }
 
-    try{
-      const response = await fetch('https://mailit-2.onrender.com//send-html-via-email/', {
-        method: 'POST',
-        body: apiPayload,
-      })
+    try {
+      const response = await fetch(
+        "https://mailit-2.onrender.com/send-html-via-email/",
+        {
+          method: "POST",
+          body: apiPayload,
+        }
+      );
 
-      if(!response.ok){
-        throw new Error("failed to perform the api operation")
+      if (!response.ok) {
+        throw new Error("failed to perform the api operation");
       }
 
-      const result = await response.json()
-      console.log('API response', result)
-
+      const result = await response.json();
+      console.log("API response", result);
+      
+    } catch (error) {
+      console.error("Error", error);
     }
-    catch(error){
-      console.error('Error', error)
+    finally{
+      setLoading(false);
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'pdf' | 'csv') => {
-    const file = e.target.files?.[0] || null;
-    setFormData(prev => ({
+  console.log("result")
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "pdf" | "csv"
+  ) => {
+    const file = e?.target?.files?.[0] || null;
+    console.log("file", file);
+    setFormData((prev) => ({
       ...prev,
-      [type === 'pdf' ? 'temporary_pdf' : 'CSV']: file
+      [type === "pdf" ? "temporary_pdf" : "CSV"]: file,
     }));
+
+    if (file) {
+      console.log(`${type.toUpperCase()} File selected:`, file);
+    } else {
+      console.log(`${type.toUpperCase()} file removed.`);
+    }
   };
 
   return (
     <motion.div
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ 
+      transition={{
         type: "spring",
         stiffness: 100,
         damping: 15,
-        duration: 0.8
+        duration: 0.8,
       }}
       className="w-full max-w-2xl bg-white/90 backdrop-blur-sm p-12 rounded-2xl shadow-xl"
     >
@@ -87,7 +105,7 @@ export function AnimatedCard2() {
         <h2 className="text-4xl font-bold text-gray-800 mb-8 text-center">
           SEND CUSTOM EMAIL
         </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* File Upload Section */}
           <motion.div
@@ -101,20 +119,24 @@ export function AnimatedCard2() {
                 PDF Document
               </label>
               <div className="relative">
+                {/* Invisible Input */}
                 <input
                   type="file"
                   accept=".pdf"
-                  onChange={(e) => handleFileChange(e, 'pdf')}
-                  className="hidden"
                   id="pdf-upload"
+                  onChange={(e) => handleFileChange(e, "pdf")}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
+                {/* Visible Label */}
                 <label
                   htmlFor="pdf-upload"
                   className="w-full flex items-center justify-center px-4 py-3 border-2 border-dashed border-yellow-300 rounded-lg cursor-pointer hover:border-yellow-500 transition-colors"
                 >
                   <Upload className="mr-2 text-yellow-500" size={20} />
                   <span className="text-gray-600">
-                    {formData.temporary_pdf ? formData.temporary_pdf.name : 'Upload PDF'}
+                    {formData.temporary_pdf
+                      ? formData.temporary_pdf.name
+                      : "Upload PDF"}
                   </span>
                 </label>
               </div>
@@ -128,8 +150,8 @@ export function AnimatedCard2() {
                 <input
                   type="file"
                   accept=".csv"
-                  onChange={(e) => handleFileChange(e, 'csv')}
-                  className="hidden"
+                  onChange={(e) => handleFileChange(e, "csv")}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   id="csv-upload"
                 />
                 <label
@@ -138,7 +160,7 @@ export function AnimatedCard2() {
                 >
                   <Upload className="mr-2 text-yellow-500" size={20} />
                   <span className="text-gray-600">
-                    {formData.CSV ? formData.CSV.name : 'Upload CSV'}
+                    {formData.CSV ? formData.CSV.name : "Upload CSV"}
                   </span>
                 </label>
               </div>
@@ -157,7 +179,9 @@ export function AnimatedCard2() {
             <input
               type="sender_email"
               value={formData.sender_email}
-              onChange={(e) => setFormData({ ...formData, sender_email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, sender_email: e.target.value })
+              }
               className="w-full px-4 py-3 rounded-lg border text-black border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 outline-none"
               placeholder="Enter your email"
             />
@@ -174,7 +198,9 @@ export function AnimatedCard2() {
             <input
               type="sender_password"
               value={formData.sender_password}
-              onChange={(e) => setFormData({ ...formData, sender_password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, sender_password: e.target.value })
+              }
               className="w-full px-4 py-3 rounded-lg border text-black border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 outline-none"
               placeholder="Enter your password"
             />
@@ -191,7 +217,9 @@ export function AnimatedCard2() {
             <input
               type="text"
               value={formData.data_source}
-              onChange={(e) => setFormData({ ...formData, data_source: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, data_source: e.target.value })
+              }
               className="w-full px-4 py-3 rounded-lg border text-black border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 outline-none"
               placeholder="Receiver's Email"
             />
@@ -208,7 +236,9 @@ export function AnimatedCard2() {
             <input
               type="text"
               value={formData.html_body}
-              onChange={(e) => setFormData({ ...formData, html_body: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, html_body: e.target.value })
+              }
               className="w-full px-4 py-3 rounded-lg border text-black border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 outline-none"
               placeholder="HTML or Text"
             />
@@ -220,9 +250,11 @@ export function AnimatedCard2() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white py-4 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:opacity-90 transition-opacity mt-8"
-        >
-          <span>Submit</span>
-          <Send size={20} />
+        >{!Loading ? 
+          <><span>Submit</span><Send size={20} /></> :
+          <><span>Loading</span><Loader size={20} /></>
+        }
+          
         </motion.button>
       </form>
     </motion.div>
