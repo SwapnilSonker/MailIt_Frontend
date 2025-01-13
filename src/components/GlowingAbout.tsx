@@ -1,4 +1,4 @@
-import { Info } from 'lucide-react';
+
 import { createLucideIcon } from 'lucide-react';
 
 // Define your custom icon using createLucideIcon
