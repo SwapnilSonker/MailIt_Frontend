@@ -28,7 +28,7 @@ export default function Home() {
   }, []);
   return (
     <div className="bg-gradient-to-br from-yellow-600 to-white">
-      <Template>
+      <Template key={"motion-template"}>
         <header className="flex justify-center items-center p-5 ">
           <div className="flex items-center space-x-10 bg-white/10 backdrop-blur-md rounded-full px-10 py-4 shadow-lg">
             <GlowingHomeIcon key={"home-icon"} />
@@ -44,8 +44,9 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.2 }}
           transition={{ duration: 2 }}
+          key={"motion-1"}
         >
-          {[...Array(20)].map((_, i) => (
+          {[...Array(20)]?.map((_, i) => (
             <motion.div
               key={`particle-${i}`}
               className="absolute h-2 w-2 bg-yellow-300 rounded-full"
@@ -75,6 +76,7 @@ export default function Home() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
+            key={"motion-2"}
           >
             {/* Animated Mail Icon */}
             <motion.div
@@ -87,6 +89,7 @@ export default function Home() {
                 damping: 15,
                 delay: 0.2
               }}
+              key={"motion-3"}
             >
               <motion.div
                 animate={{
@@ -98,6 +101,7 @@ export default function Home() {
                   repeat: Infinity,
                   repeatType: "reverse"
                 }}
+                key={"motion-3"}
               >
                 <Mail size={100} className="text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]" />
               </motion.div>
@@ -113,6 +117,7 @@ export default function Home() {
                   repeatType: "reverse",
                   delay: 1
                 }}
+                key={"motion-4"}
               >
                 <Sparkles size={32} className="text-yellow-300" />
               </motion.div>
@@ -126,6 +131,7 @@ export default function Home() {
                 initial={{ x: 100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.4, type: "spring", stiffness: 100 }}
+                key="motion-h1"
               >
                 Mail
               </motion.h1>
@@ -136,6 +142,7 @@ export default function Home() {
                 initial={{ x: 120, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.6, type: "spring", stiffness: 100 }}
+                key="motion-div1"
               >
                 <motion.span 
                   className="text-9xl font-thin text-yellow-200 inline-block"
@@ -145,6 +152,7 @@ export default function Home() {
                     repeat: Infinity,
                     repeatType: "reverse"
                   }}
+                  key={"motion-span"}
                 >
                   It
                 </motion.span>
@@ -160,6 +168,7 @@ export default function Home() {
                     repeatType: "reverse",
                     delay: 1
                   }}
+                  key={"motion-div2"}
                 >
                   <Send size={40} className="text-yellow-300" />
                 </motion.div>
