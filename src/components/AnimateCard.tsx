@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Loader, Send, Upload } from 'lucide-react';
+import { Eye, EyeOff, Loader, Send, Upload } from 'lucide-react';
 
 interface FormData {
   sender_password: string;
@@ -18,6 +18,7 @@ export function AnimatedCard() {
     resume_pdf: null,
   });
 
+  const [showPassword , setshowPassword] = useState(false)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'pdf' | 'csv') => {
     const file = e?.target?.files?.[0] || null;
     setFormData(prev => ({
@@ -92,7 +93,7 @@ export function AnimatedCard() {
               Email
             </label>
             <input
-              type="sender_email"
+              type="email"
               value={formData.sender_email}
               onChange={(e) =>
                 setFormData({ ...formData, sender_email: e.target.value })
@@ -110,15 +111,24 @@ export function AnimatedCard() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
-            <input
-              type="sender_password"
-              value={formData.sender_password}
-              onChange={(e) =>
-                setFormData({ ...formData, sender_password: e.target.value })
-              }
-              className="w-full px-4 py-3 rounded-lg border text-black border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 outline-none"
-              placeholder="Enter your password"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={formData.sender_password}
+                onChange={(e) =>
+                  setFormData({ ...formData, sender_password: e.target.value })
+                }
+                className="w-full px-4 py-3 pr-10 rounded-lg border text-black border-gray-300 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200 outline-none"
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                onClick={() => setshowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 flex inset-y-0 transform -translate-y-1/2 text-gray-500 focus:outline-none"
+              >
+                {showPassword ? <Eye /> : <EyeOff />}
+              </button>
+            </div>
           </motion.div>
 
           <motion.div
@@ -186,10 +196,17 @@ export function AnimatedCard() {
           whileTap={{ scale: 0.98 }}
           className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:opacity-90 transition-opacity"
         >
-          {!Loading ? 
-          <><span>Submit</span><Send size={20} /></> :
-          <><span>Loading</span><Loader size={20} /></>
-        }
+          {!Loading ? (
+            <>
+              <span>Submit</span>
+              <Send size={20} />
+            </>
+          ) : (
+            <>
+              <span>Loading</span>
+              <Loader size={20} />
+            </>
+          )}
         </motion.button>
       </form>
     </motion.div>
